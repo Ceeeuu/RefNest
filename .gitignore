@@ -1,0 +1,27 @@
+# === Secrets / env ===
+.env
+*.env
+!.env.example
+
+# === Python / Django ===
+__pycache__/
+*.py[cod]
+*.sqlite3
+backend/media/
+backend/staticfiles/
+.venv/
+venv/
+env/
+
+# === Node / React ===
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-error.log*
+
+# === Editor / OS ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
