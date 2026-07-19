@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createArtwork } from "../api/artworks";
 
-const PLATFORMS = ["X", "Pixiv", "Instagram", "Threads", "Bilibili", "Other"];
+const PLATFORMS = ["X", "Pixiv", "Instagram", "Threads", "Bilibili", "米畫師", "小紅書", "Pinterest", "Other"];
 
 function NewArtwork() {
   const navigate = useNavigate();

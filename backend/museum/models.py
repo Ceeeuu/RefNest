@@ -19,6 +19,9 @@ class Artwork(models.Model):
         ("Instagram", "Instagram"),
         ("Threads", "Threads"),
         ("Bilibili", "Bilibili"),
+        ("米畫師", "米畫師"),
+        ("小紅書", "小紅書"),
+        ("Pinterest", "Pinterest"),
         ("Other", "Other"),
     ]
 
