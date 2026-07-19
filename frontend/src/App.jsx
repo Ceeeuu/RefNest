@@ -4,6 +4,7 @@ import Gallery from "./pages/Gallery";
 import NewArtwork from "./pages/NewArtwork";
 import ArtworkDetail from "./pages/ArtworkDetail";
 import CuratorSidebar from "./components/CuratorSidebar";
+import CursorFx from "./components/CursorFx";
 
 function App() {
   // When the Curator "curates", it puts a set of artworks here; the Gallery
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <div className="app">
+      <CursorFx />
       <header className="topbar">
         <Link to="/" className="brand" onClick={() => setCurated(null)}>RefNest</Link>
         <nav>

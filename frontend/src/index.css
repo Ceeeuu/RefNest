@@ -128,7 +128,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; }
   backface-visibility: hidden;
   filter: drop-shadow(0 8px 18px rgba(21, 22, 29, 0.22));
 }
-.flip-face.back { transform: rotateY(180deg); }
+/* chibi is smaller — ~2/3 of the frame, standing at the bottom */
+.flip-face.back { transform: rotateY(180deg) scale(0.66); transform-origin: bottom center; }
 .curator-nameplate {
   position: absolute;
   top: 0.9rem;
@@ -245,8 +246,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; }
 /* two layered wave lines: flow (CSS) + mouse parallax (JS sets --mx/--my) */
 .waves { position: relative; width: 100%; height: 54px; margin-top: 0.4rem; overflow: hidden; }
 .wave-layer { position: absolute; inset: 0; transition: transform 0.25s ease-out; will-change: transform; }
-.layer-1 { transform: translate(calc(var(--mx, 0) * 38px), calc(var(--my, 0) * 8px)) skewY(calc(var(--mx, 0) * 1.2deg)); }
-.layer-2 { transform: translate(calc(var(--mx, 0) * -58px), calc(var(--my, 0) * -11px)) skewY(calc(var(--mx, 0) * -1.2deg)); }
+.layer-1 { transform: translate(calc(var(--mx, 0) * 80px), calc(var(--my, 0) * 12px)) skewY(calc(var(--mx, 0) * 3deg)); }
+.layer-2 { transform: translate(calc(var(--mx, 0) * -120px), calc(var(--my, 0) * -14px)) skewY(calc(var(--mx, 0) * -3deg)); }
 .waves .wave { position: absolute; top: 4px; left: 0; display: block; width: 200%; height: 46px; }
 .wave-1 { color: var(--accent-2); opacity: 0.6; animation: wave-flow 16s linear infinite; }
 .wave-2 { color: var(--line); animation: wave-flow 11s linear infinite reverse; }
@@ -346,6 +347,27 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; }
   font-size: 0.9rem;
   background: var(--surface);
   color: var(--ink);
+}
+
+/* ---------- cursor sparkles (Klein-blue circles + stars) ---------- */
+.cursor-fx { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+.fx {
+  position: fixed;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px; /* center on the cursor */
+  background: var(--accent);
+  animation: fx-pop 0.75s ease-out forwards;
+}
+.fx.dot { border-radius: 50%; }
+.fx.star {
+  background: var(--accent-2);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+.fx.burst { width: 13px; height: 13px; animation-duration: 0.9s; }
+@keyframes fx-pop {
+  0% { opacity: 0.9; transform: translate(0, 0) scale(var(--s, 1)); }
+  100% { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(0); }
 }
 
 /* stack the curator below the gallery on narrower screens */
