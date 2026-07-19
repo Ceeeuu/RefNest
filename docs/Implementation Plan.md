@@ -102,18 +102,12 @@ CRUD 用 `ModelViewSet + DefaultRouter`；三個 AI 端點用獨立 `APIView`。
 
 ---
 
-## Stage 3 — AI 標籤建議
+> **設計調整（2026-07）**：不做「AI 幫忙建議標籤」。理由：使用者要的是**快速記錄**,沒耐心寫長文。
+> - 標籤 = 使用者手動快速輸入(逗號/頓號/分號/斜線分隔)。
+> - **note = 之後 RAG 檢索的主要內容來源(資料來源)**,填多填少隨意。
+> - AI 的價值集中在「**用對話找圖**」——你問策展人,它去語意搜尋你的收藏並找出圖片。
 
-1. `services/openai_tags.py`：把 note 丟 OpenAI chat（要求回傳 JSON 標籤陣列），做好空輸入與 API 失敗的處理。
-2. `POST /api/suggest-tags/`。
-3. 前端 `TagEditor`：呼叫後顯示建議標籤為 chip，可**接受 / 刪除 / 編輯 / 新增**，最終清單才隨作品送出。
-
-**驗收**：輸入「我喜歡透明感的眼睛和頭髮光澤」→ 回傳合理標籤；使用者能自由增刪後再存。
-**備援**：若 API 額度/網路異常，回傳空陣列並前端顯示「暫無建議」，不阻擋存檔。
-
----
-
-## Stage 4 — Embedding 與 pgvector
+## Stage 3 — Embedding 與 pgvector
 
 1. `services/embeddings.py`：用 `text-embedding-3-small`（1536 維）將「note + tags + artist + platform」組成的文字轉向量。
 2. 在 Artwork 存檔 / 更新時寫入 `embedding`（signal 或 serializer 內處理）。
@@ -123,7 +117,7 @@ CRUD 用 `ModelViewSet + DefaultRouter`；三個 AI 端點用獨立 `APIView`。
 
 ---
 
-## Stage 5 — 語意搜尋
+## Stage 4 — 語意搜尋
 
 1. `GET /api/search/?q=`：把查詢字串 embed → pgvector 依 **cosine distance** 排序取 Top-N。
 2. 前端搜尋列（放在畫廊頂部，維持美術館調性，不做成工具列）。
@@ -132,16 +126,16 @@ CRUD 用 `ModelViewSet + DefaultRouter`；三個 AI 端點用獨立 `APIView`。
 
 ---
 
-## Stage 6 — AI 策展人（OC）
+## Stage 5 — AI 策展人（OC）／對話式 RAG
 
-1. `POST /api/curator/`：先做語意搜尋取相關作品 → 連同使用者訊息餵給 OpenAI chat，system prompt 設定為「美術館館員 OC」的口吻（非聊天機器人）→ 回傳文字回應 + 相關作品清單。
+1. `POST /api/curator/`：先把使用者訊息做語意搜尋取相關作品 → 連同訊息餵給 OpenAI chat，system prompt 設定為「美術館館員 OC」的口吻（非聊天機器人）→ 回傳文字回應 + **找到的作品圖片清單**。
 2. 前端 `CuratorSidebar`：**右側常駐**，顯示 `asset/98b645891dbc5085.png` 立繪，像展場 NPC；可輸入問題、顯示回應與被引用的作品縮圖。
 
-**驗收**：問「我存過哪些夏天氛圍的作品？」策展人以角色口吻回應並列出對應作品；MVP 先不做串流（後續要再加）。
+**驗收**：問「我存過哪些夏天氛圍的作品？」策展人以角色口吻回應並列出對應圖片；MVP 先不做串流（後續要再加）。
 
 ---
 
-## Stage 7 — UI 打磨（美術館感）
+## Stage 6 — UI 打磨（美術館感）
 
 1. 建立主題 tokens：溫暖／沉靜／高質感配色、襯線標題字、留白。
 2. 畫廊牆進場動畫、hover 微互動、作品詳情過場。
@@ -166,12 +160,13 @@ CRUD 用 `ModelViewSet + DefaultRouter`；三個 AI 端點用獨立 `APIView`。
 
 1. **Windows 本機安裝 pgvector（最大風險）**：全本機、不用 Docker，因此 pgvector 必須裝進本機 PostgreSQL。Windows 原生安裝通常需要用對應 Postgres 版本的預編譯 DLL，或以 MSVC 自行編譯。建議 Stage 1 前先確認你的 Postgres 版本，我再給對應安裝步驟，避免卡在 `CREATE EXTENSION vector;`。
 2. **`.env` 與 `media/` 不進版控**：金鑰與上傳圖片需 `.gitignore`。
-3. **OpenAI 成本控管**：embedding 只在存檔/更新時算一次；標籤與策展人呼叫做好錯誤處理，不因 API 失敗阻擋核心 CRUD。
-4. **CORS**：dev 明確允許 `localhost:5173`，勿用萬用開放。
+3. **OpenAI 成本控管**：embedding 只在存檔/更新時算一次；策展人呼叫做好錯誤處理，不因 API 失敗阻擋核心 CRUD。
+4. **OpenAI 連線**：開發網路須連得到 `api.openai.com`（部分公司/防火牆會封鎖）。Stage 3 起才需要,若被擋可換網路或掛 VPN。
+5. **CORS**：dev 明確允許 `localhost:5173`，勿用萬用開放。
 
 ---
 
 ## 執行順序建議
 
-Stage 1 → 2 先把「能存、能看」跑通（此時產品已有基本價值），再依序疊上 AI（3→4→5→6），最後才 UI 打磨（7）。每個 Stage 都有上面的驗收條件，達標才進下一階段。
+Stage 1 → 2 先把「能存、能看」跑通（此時產品已有基本價值），再依序疊上 AI（3 embedding → 4 語意搜尋 → 5 對話式策展人），最後才 UI 打磨（6）。每個 Stage 都有上面的驗收條件，達標才進下一階段。
 ```
