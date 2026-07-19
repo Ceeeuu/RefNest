@@ -32,7 +32,7 @@ function NewArtwork() {
     data.append("source_url", form.source_url);
     data.append("note", form.note);
     form.tags
-      .split(/[,，、]/) // accept half-width, full-width comma, and 、
+      .split(/[,，、;；/／]/) // accept , ， 、 ; ； / ／ as separators
       .map((t) => t.trim())
       .filter(Boolean)
       .forEach((t) => data.append("tags", t));
