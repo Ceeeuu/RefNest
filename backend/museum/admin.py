@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Artwork, Tag
+
+admin.site.register(Artwork)
+admin.site.register(Tag)
