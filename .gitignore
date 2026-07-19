@@ -20,6 +20,9 @@ frontend/.vite/
 npm-debug.log*
 yarn-error.log*
 
+# === Personal learning notes (local only) ===
+docs/Learning Notes.md
+
 # === Editor / OS ===
 .vscode/
 .idea/
