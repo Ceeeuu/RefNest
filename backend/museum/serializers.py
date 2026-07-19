@@ -17,7 +17,7 @@ class ArtworkSerializer(serializers.ModelSerializer):
         model = Artwork
         fields = [
             "id", "image", "artist", "platform",
-            "source_url", "note", "tags", "created_at",
+            "note", "tags", "created_at",
         ]
 
     def create(self, validated_data):

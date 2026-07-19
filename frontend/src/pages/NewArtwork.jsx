@@ -10,9 +10,8 @@ function NewArtwork() {
   const [form, setForm] = useState({
     artist: "",
     platform: "",
-    source_url: "",
     note: "",
-    tags: "", // ponytail: comma-separated for now; AI tag suggestion lands in Stage 3
+    tags: "",
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +28,6 @@ function NewArtwork() {
     data.append("image", image);
     data.append("artist", form.artist);
     data.append("platform", form.platform);
-    data.append("source_url", form.source_url);
     data.append("note", form.note);
     form.tags
       .split(/[,，、;；/／]/) // accept , ， 、 ; ； / ／ as separators
@@ -72,11 +70,6 @@ function NewArtwork() {
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-      </label>
-
-      <label>
-        Source URL
-        <input name="source_url" value={form.source_url} onChange={update} placeholder="https://…" />
       </label>
 
       <label>
