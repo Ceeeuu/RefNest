@@ -20,8 +20,9 @@ frontend/.vite/
 npm-debug.log*
 yarn-error.log*
 
-# === Personal learning notes (local only) ===
+# === Personal notes / translations (local only) ===
 docs/Learning Notes.md
+docs/中文翻譯.md
 
 # === Editor / OS ===
 .vscode/
