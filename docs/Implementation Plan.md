@@ -152,7 +152,7 @@ CRUD 用 `ModelViewSet + DefaultRouter`；三個 AI 端點用獨立 `APIView`。
 
 - 前端：`cd frontend && npm run dev`（Vite，預設 5173）
 - 後端：`cd backend && python manage.py runserver`（預設 8000）
-- 資料庫：本機安裝的 PostgreSQL（含 pgvector 擴充）
+- 資料庫：Docker 的 `pgvector/pgvector:pg18` 容器（對外 5433）。啟動:`docker start refnest-db`（首次用 `docker run` 建立,見 `.env.example`）。Python/Node 仍本機跑。
 
 ---
 

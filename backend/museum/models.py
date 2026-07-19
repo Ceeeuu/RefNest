@@ -1,4 +1,5 @@
 from django.db import models
+from pgvector.django import VectorField
 
 
 class Tag(models.Model):
@@ -33,6 +34,8 @@ class Artwork(models.Model):
     source_url = models.URLField(blank=True)
     note = models.TextField(blank=True)  # the user's own words = the real knowledge
     tags = models.ManyToManyField(Tag, blank=True, related_name="artworks")
+    # 1536 = text-embedding-3-small; null until the embedding is generated
+    embedding = VectorField(dimensions=1536, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

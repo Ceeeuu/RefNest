@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Artwork, Tag
+from .services.embeddings import embed_artwork
 
 
 class ArtworkSerializer(serializers.ModelSerializer):
@@ -23,6 +24,7 @@ class ArtworkSerializer(serializers.ModelSerializer):
         tag_names = validated_data.pop("tags", [])
         artwork = Artwork.objects.create(**validated_data)
         self._set_tags(artwork, tag_names)
+        self._embed(artwork)
         return artwork
 
     def update(self, instance, validated_data):
@@ -32,6 +34,7 @@ class ArtworkSerializer(serializers.ModelSerializer):
         instance.save()
         if tag_names is not None:  # only touch tags if the client sent them
             self._set_tags(instance, tag_names)
+        self._embed(instance)  # content may have changed → refresh vector
         return instance
 
     def _set_tags(self, artwork, names):
@@ -40,6 +43,13 @@ class ArtworkSerializer(serializers.ModelSerializer):
             for n in names if n.strip()
         ]
         artwork.tags.set(tags)
+
+    def _embed(self, artwork):
+        # ponytail: never block CRUD if the embedding API is down/quota-less
+        try:
+            embed_artwork(artwork)
+        except Exception:
+            pass
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
