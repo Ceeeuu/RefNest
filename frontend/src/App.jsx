@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
-import client from "./api/client";
+import { Link, Route, Routes } from "react-router-dom";
+import Gallery from "./pages/Gallery";
+import NewArtwork from "./pages/NewArtwork";
+import ArtworkDetail from "./pages/ArtworkDetail";
 
 function App() {
-  const [status, setStatus] = useState("connecting...");
-
-  useEffect(() => {
-    client
-      .get("/ping/")
-      .then((res) => setStatus(`connected: ${JSON.stringify(res.data)}`))
-      .catch((err) => setStatus(`failed: ${err.message}`));
-  }, []);
-
   return (
-    <main style={{ fontFamily: "serif", padding: "3rem", textAlign: "center" }}>
-      <h1>RefNest</h1>
-      <p>Backend status: {status}</p>
-    </main>
+    <div className="app">
+      <header className="topbar">
+        <Link to="/" className="brand">RefNest</Link>
+        <nav>
+          <Link to="/new" className="btn">+ New Artwork</Link>
+        </nav>
+      </header>
+
+      <main className="content">
+        <Routes>
+          <Route path="/" element={<Gallery />} />
+          <Route path="/new" element={<NewArtwork />} />
+          <Route path="/artworks/:id" element={<ArtworkDetail />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
