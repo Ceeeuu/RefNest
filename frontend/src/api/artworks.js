@@ -15,3 +15,6 @@ export const deleteArtwork = (id) =>
 
 export const searchArtworks = (q) =>
   client.get("/search/", { params: { q } }).then((r) => r.data);
+
+export const askCurator = (message) =>
+  client.post("/curator/", { message }).then((r) => r.data);

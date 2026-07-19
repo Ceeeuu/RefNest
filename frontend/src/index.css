@@ -60,7 +60,62 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; }
 .btn.danger { border-color: var(--accent); color: var(--accent); }
 .btn.danger:hover { background: var(--accent); color: #fff; }
 
-.content { padding: 0 2.5rem 4rem; max-width: 1220px; margin: 0 auto; }
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 2.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2.5rem 4rem;
+  align-items: start;
+}
+.content { min-width: 0; }
+
+/* ---------- curator sidebar ---------- */
+.curator {
+  position: sticky;
+  top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 8px 8px 0 var(--bg-deep);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - 3rem);
+}
+.curator-portrait {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+}
+.curator-portrait img {
+  width: 66px; height: 66px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--accent-2);
+}
+.curator-portrait h3 { margin: 0; font-size: 1.25rem; }
+.curator-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.9rem; }
+.bubble p { margin: 0; line-height: 1.55; font-size: 0.98rem; }
+.bubble.visitor { text-align: right; color: var(--muted); font-style: italic; }
+.bubble.curator { background: var(--bg); border-left: 3px solid var(--accent); padding: 0.7rem 0.8rem; }
+.bubble-thumbs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+.bubble-thumbs img { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--line); }
+.curator-input { display: flex; gap: 0.5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+.curator-input input {
+  flex: 1;
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--serif);
+  font-size: 1rem;
+  background: #fff;
+}
+.curator-input input:focus { outline: none; border-color: var(--accent); }
+.curator-input .btn { padding: 0.55rem 1rem; }
 
 /* ---------- gallery hero ---------- */
 .hero { text-align: center; padding: 2.5rem 0 1rem; }
@@ -203,8 +258,15 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; }
   color: var(--ink);
 }
 
+/* stack the curator below the gallery on narrower screens */
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+  .curator { position: static; max-height: none; }
+  .curator-log { max-height: 380px; }
+}
+
 @media (max-width: 760px) {
   .detail { grid-template-columns: 1fr; gap: 1.8rem; }
-  .content { padding: 0 1.3rem 3rem; }
+  .layout { padding: 0 1.3rem 3rem; }
   .topbar { padding: 1rem 1.3rem; }
 }

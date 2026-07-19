@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from .models import Artwork
 from .serializers import ArtworkSerializer
+from .services.curator import ask_curator
 from .services.embeddings import embed_text
 
 
@@ -29,6 +30,17 @@ def search_view(request):
     )
     data = ArtworkSerializer(results, many=True, context={'request': request}).data
     return Response(data)
+
+
+@api_view(['POST'])
+def curator_view(request):
+    """AI curator: answer a question and return the artworks it referenced."""
+    try:
+        reply, matches = ask_curator(request.data.get('message', ''))
+    except Exception as e:
+        return Response({'error': str(e), 'artworks': []}, status=503)
+    data = ArtworkSerializer(matches, many=True, context={'request': request}).data
+    return Response({'reply': reply, 'artworks': data})
 
 
 class ArtworkViewSet(viewsets.ModelViewSet):
