@@ -10,9 +10,13 @@ MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 
 
 def artwork_text(artwork) -> str:
-    """Combine the user's text into one string to embed."""
+    """Combine the user's *descriptive* text to embed.
+
+    Only note + tags — the semantic content. artist/platform are categorical
+    and belong in structured filters, not the vector (they'd add noise).
+    """
     tags = ", ".join(t.name for t in artwork.tags.all())
-    parts = [artwork.note, tags, artwork.artist, artwork.platform]
+    parts = [artwork.note, tags]
     return "\n".join(p for p in parts if p).strip()
 
 

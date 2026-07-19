@@ -8,5 +8,6 @@ router.register(r'artworks', views.ArtworkViewSet)
 
 urlpatterns = [
     path('ping/', views.ping),
+    path('search/', views.search_view),
     path('', include(router.urls)),
 ]

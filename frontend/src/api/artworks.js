@@ -12,3 +12,6 @@ export const createArtwork = (formData) =>
 
 export const deleteArtwork = (id) =>
   client.delete(`/artworks/${id}/`);
+
+export const searchArtworks = (q) =>
+  client.get("/search/", { params: { q } }).then((r) => r.data);
