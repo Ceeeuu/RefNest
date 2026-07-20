@@ -12,3 +12,6 @@ export const createArtwork = (formData) =>
 
 export const deleteArtwork = (id) =>
   client.delete(`/artworks/${id}/`);
+
+export const askCurator = (message) =>
+  client.post("/curator/", { message }).then((r) => r.data);

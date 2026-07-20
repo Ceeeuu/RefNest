@@ -31,7 +31,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-5$k(t3+7$vz7w-l_073ir59#e4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# dev: allow access from the LAN (e.g. opening the site on your phone)
+ALLOWED_HOSTS = ['*'] if DEBUG else []
 
 
 # Application definition
@@ -137,10 +138,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS: allow the Vite dev server (React) to call this API during development
+# CORS: allow the Vite dev server (React) to call this API during development,
+# from localhost and from any LAN address on port 5173 (phone on same Wi-Fi).
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^http://[\w.-]+:5173$',
 ]
 
 # Django REST Framework

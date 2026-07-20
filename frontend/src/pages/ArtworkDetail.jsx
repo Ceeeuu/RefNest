@@ -43,14 +43,6 @@ function ArtworkDetail() {
           </div>
         )}
 
-        {art.source_url && (
-          <p>
-            <a href={art.source_url} target="_blank" rel="noreferrer">
-              View original source ↗
-            </a>
-          </p>
-        )}
-
         <p className="muted small">
           Saved {new Date(art.created_at).toLocaleDateString()}
         </p>
